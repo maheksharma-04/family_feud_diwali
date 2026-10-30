@@ -2,353 +2,238 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Family Feud — Diwali Edition</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Family Feud: Diwali Edition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Hind:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-  }
+:root{
+  --bg:#1a0a2e; --bg2:#2d0f3a; --panel:#2a1245; --panel2:#3a1a5c;
+  --gold:#ffc83d; --gold2:#ff9f1c; --marigold:#ff7a18; --rose:#e63e6d;
+  --teal:#2ec4b6; --ink:#1a0a2e; --text:#fff4e0; --muted:#c9b6e6; --line:#5b3a8a;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#1a0a2e;--text:#fff4e0}}
+:root[data-theme="dark"]{--bg:#1a0a2e;--text:#fff4e0}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"Hind",system-ui,sans-serif;color:var(--text);min-height:100vh;padding:18px;
+  background:
+    radial-gradient(circle at 15% 0%,rgba(255,122,24,.28),transparent 45%),
+    radial-gradient(circle at 90% 10%,rgba(230,62,109,.25),transparent 40%),
+    radial-gradient(circle at 50% 110%,rgba(255,200,61,.18),transparent 50%),
+    var(--bg);
+  background-attachment:fixed;
+}
+.app{max-width:1180px;margin:auto}
+h1{
+  font-family:"Rozha One",Georgia,serif;font-weight:400;text-align:center;
+  font-size:clamp(28px,5vw,48px);color:var(--gold);letter-spacing:.5px;
+  text-shadow:0 0 24px rgba(255,159,28,.55),0 3px 0 #7a2d00;
+}
+.sub{text-align:center;color:var(--muted);margin:2px 0 14px;font-size:15px}
+.lamps{text-align:center;font-size:22px;letter-spacing:10px;margin-bottom:10px;filter:drop-shadow(0 0 8px #ffb300)}
 
-  body {
-    background: radial-gradient(circle at top, #123a7a, #071a3a);
-    color: white;
-    min-height: 100vh;
-    padding: 16px;
-  }
+button{
+  font:inherit;font-weight:600;font-size:15px;padding:11px 14px;border:0;border-radius:10px;cursor:pointer;
+  color:var(--ink);background:linear-gradient(180deg,var(--gold),var(--gold2));
+  box-shadow:0 3px 0 #a85d00;transition:transform .1s,filter .15s;
+}
+button:hover{filter:brightness(1.08)}
+button:active{transform:translateY(2px);box-shadow:0 1px 0 #a85d00}
+button:focus-visible,.answer:focus-visible,.strike:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.b-steal{background:linear-gradient(180deg,#5eead4,var(--teal));box-shadow:0 3px 0 #17796f}
+.b-pass{background:linear-gradient(180deg,#8f7cff,#6b55e8);color:#fff;box-shadow:0 3px 0 #3d2fa0}
+.b-next{background:linear-gradient(180deg,#fff,#e8dcc8);box-shadow:0 3px 0 #9d8f78}
+.b-ghost{background:transparent;color:var(--text);border:1.5px solid var(--line);box-shadow:none}
+.b-small{padding:6px 11px;font-size:14px;border-radius:8px}
 
-  .app {
-    max-width: 1200px;
-    margin: auto;
-  }
+.toolbar{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:14px}
 
-  h1 {
-    text-align: center;
-    color: #ffd54a;
-    margin-bottom: 14px;
-    text-shadow: 2px 2px #000;
-  }
+.topbar{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:stretch;margin-bottom:16px}
+.team{
+  background:linear-gradient(160deg,var(--panel2),var(--panel));border:2px solid var(--line);
+  border-radius:18px;padding:14px;text-align:center;position:relative;overflow:hidden;
+}
+.team::before{content:"";position:absolute;inset:0 0 auto 0;height:5px;background:var(--bar)}
+.team.t1{--bar:linear-gradient(90deg,var(--marigold),var(--gold))}
+.team.t2{--bar:linear-gradient(90deg,var(--rose),#ff8fab)}
+.team h2{
+  font-family:"Rozha One",Georgia,serif;font-weight:400;font-size:24px;outline:none;border-radius:6px;padding:0 8px;display:inline-block;
+}
+.team h2:focus{background:rgba(255,255,255,.1)}
+.score{font-family:"Rozha One",Georgia,serif;font-size:64px;line-height:1.1;color:var(--gold);text-shadow:0 0 18px rgba(255,200,61,.4)}
+.score.bump{animation:bump .35s}
+@keyframes bump{40%{transform:scale(1.18)}}
+.team-controls{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:6px}
 
-  .topbar {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    gap: 12px;
-    align-items: center;
-    margin-bottom: 16px;
-  }
+.center{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-width:220px}
+.round{color:var(--muted);font-weight:600;font-size:15px}
+.timer{
+  --p:100%;width:116px;height:116px;border-radius:50%;display:grid;place-items:center;
+  background:conic-gradient(var(--gold) var(--p),rgba(255,255,255,.12) 0);
+  box-shadow:0 0 24px rgba(255,159,28,.3);
+}
+.timer.steal{background:conic-gradient(var(--teal) var(--p),rgba(255,255,255,.12) 0);box-shadow:0 0 24px rgba(46,196,182,.5)}
+.timer-in{width:94px;height:94px;border-radius:50%;background:var(--bg2);display:grid;place-items:center;
+  font-family:"Rozha One",Georgia,serif;font-size:44px}
+.timer.low .timer-in{color:#ff6b6b}
+.timer-btns{display:flex;gap:6px}
 
-  .team {
-    background: #0d2b5c;
-    border: 3px solid #ffd54a;
-    border-radius: 14px;
-    padding: 12px;
-    text-align: center;
-  }
+.question{
+  background:linear-gradient(180deg,#4b1d7a,var(--panel));border:2px solid var(--gold);border-radius:18px;
+  padding:22px 26px;text-align:center;font-size:clamp(20px,2.6vw,28px);font-weight:600;line-height:1.35;
+  margin-bottom:16px;min-height:96px;display:grid;place-items:center;
+  box-shadow:0 0 0 4px rgba(255,200,61,.12),0 10px 30px rgba(0,0,0,.35);
+}
 
-  .team h2 {
-    font-size: 22px;
-    margin-bottom: 6px;
-  }
+.board{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.answer{
+  display:flex;align-items:center;gap:12px;min-height:66px;padding:10px 12px;cursor:pointer;
+  background:linear-gradient(180deg,#34195a,#27124a);border:2px solid var(--line);border-radius:14px;
+  font-size:19px;font-weight:600;transition:transform .12s,border-color .12s;
+}
+.answer:hover{border-color:var(--gold);transform:translateY(-1px)}
+.rank{
+  flex:none;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;
+  background:rgba(255,255,255,.1);color:var(--muted);font-size:16px;
+}
+.answer .text{flex:1}
+.pts{
+  flex:none;min-width:54px;text-align:center;padding:5px 10px;border-radius:9px;
+  font-family:"Rozha One",Georgia,serif;font-size:24px;background:rgba(0,0,0,.3);color:var(--gold);
+}
+.answer.selected{
+  background:linear-gradient(180deg,var(--gold),var(--gold2));color:var(--ink);border-color:#fff;cursor:default;
+  transform:none;animation:flip .45s;
+}
+.answer.selected .rank{background:var(--ink);color:var(--gold)}
+.answer.selected .pts{background:var(--ink);color:var(--gold)}
+@keyframes flip{from{transform:rotateX(90deg)}to{transform:rotateX(0)}}
+.hide-answers .answer:not(.selected) .text,.hide-answers .answer:not(.selected) .pts{filter:blur(9px);opacity:.6}
 
-  .score {
-    font-size: 44px;
-    font-weight: bold;
-    color: #7CFC00;
-  }
+.row-mid{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:center;margin-bottom:12px}
+.strikes{display:flex;gap:10px}
+.strike{
+  width:64px;height:64px;border-radius:14px;display:grid;place-items:center;cursor:pointer;user-select:none;
+  font-size:40px;font-weight:700;color:#7a2a3a;background:rgba(255,255,255,.06);border:2px solid #5b2a45;transition:.15s;
+}
+.strike.on{background:#e63e3e;color:#fff;border-color:#ff9b9b;box-shadow:0 0 22px rgba(255,70,70,.7)}
+.pot{
+  background:rgba(0,0,0,.3);border:1.5px solid var(--line);border-radius:12px;padding:8px 16px;color:var(--muted);font-weight:600;
+}
+.pot b{font-family:"Rozha One",Georgia,serif;font-weight:400;color:var(--gold);font-size:26px;margin-left:6px}
 
-  .team-controls {
-    display: flex;
-    gap: 6px;
-    justify-content: center;
-    margin-top: 8px;
-    flex-wrap: wrap;
-  }
+.status{
+  text-align:center;font-size:19px;font-weight:600;min-height:32px;color:var(--gold);margin-bottom:12px;
+}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
 
-  .center {
-    text-align: center;
-  }
+.editor{background:var(--panel);border:2px solid var(--line);border-radius:16px;padding:16px;margin-bottom:16px}
+.editor h3{color:var(--gold);margin-bottom:4px;font-size:18px}
+.editor p{color:var(--muted);font-size:14px;margin-bottom:10px}
+textarea{
+  width:100%;height:240px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;padding:12px;
+  border-radius:10px;border:1.5px solid var(--line);background:#150826;color:var(--text);resize:vertical;
+}
+.editor-buttons{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.hidden-panel{display:none}
 
-  .round {
-    font-size: 20px;
-    color: #ffd54a;
-    font-weight: bold;
-  }
-
-  .timer {
-    font-size: 54px;
-    font-weight: bold;
-    margin: 6px 0;
-    color: white;
-    text-shadow: 2px 2px #000;
-  }
-
-  .timer.steal {
-    color: #ff5252;
-  }
-
-  .question {
-    background: #0d2b5c;
-    border: 3px solid #ffd54a;
-    border-radius: 14px;
-    padding: 18px;
-    text-align: center;
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 16px;
-    min-height: 90px;
-  }
-
-  .board {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 16px;
-  }
-
-  .answer {
-    background: #123a7a;
-    border: 3px solid #4da3ff;
-    border-radius: 12px;
-    padding: 14px;
-    font-size: 20px;
-    font-weight: bold;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    min-height: 64px;
-    transition: 0.15s;
-  }
-
-  .answer:hover {
-    background: #1a4b96;
-  }
-
-  .answer .pts {
-    font-size: 24px;
-  }
-
-  .answer.selected {
-    background: #ffd54a;
-    color: #071a3a;
-    border-color: white;
-    cursor: default;
-  }
-
-  .controls {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 10px;
-    margin-bottom: 16px;
-  }
-
-  button {
-    padding: 14px 10px;
-    font-size: 17px;
-    font-weight: bold;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    color: #071a3a;
-    background: #ffd54a;
-  }
-
-  button:hover {
-    filter: brightness(1.1);
-  }
-
-  .steal {
-    background: #7CFC00;
-  }
-
-  .pass {
-    background: #4da3ff;
-    color: white;
-  }
-
-  .next {
-    background: white;
-  }
-
-  .strikes {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    margin: 10px 0 16px;
-  }
-
-  .strike-x {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background: #7a0d0d;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 48px;
-    font-weight: bold;
-    color: #ff5252;
-    border: 4px solid #ff5252;
-    cursor: pointer;
-    user-select: none;
-    transition: 0.15s;
-  }
-
-  .strike-x:hover {
-    transform: scale(1.05);
-  }
-
-  .strike-x.on {
-    background: #ff5252;
-    color: white;
-  }
-
-  .status {
-    text-align: center;
-    font-size: 21px;
-    font-weight: bold;
-    min-height: 30px;
-    color: #ffd54a;
-    margin-bottom: 12px;
-  }
-
-  .editor {
-    background: #0d2b5c;
-    border: 3px solid #4da3ff;
-    border-radius: 14px;
-    padding: 16px;
-    margin-top: 20px;
-  }
-
-  .editor h3 {
-    color: #ffd54a;
-    margin-bottom: 10px;
-  }
-
-  textarea {
-    width: 100%;
-    height: 220px;
-    font-family: monospace;
-    font-size: 14px;
-    padding: 10px;
-    border-radius: 8px;
-    border: none;
-  }
-
-  .editor-buttons {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-    flex-wrap: wrap;
-  }
-
-  .hidden-panel {
-    display: none;
-  }
-
-  .toggle-editor {
-    background: #4da3ff;
-    color: white;
-    margin: 0 auto 16px;
-    display: block;
-  }
-
-  @media (max-width: 700px) {
-    .board {
-      grid-template-columns: 1fr;
-    }
-
-    .topbar {
-      grid-template-columns: 1fr;
-    }
-  }
+@media (max-width:760px){
+  body{padding:12px}
+  .board{grid-template-columns:1fr}
+  .topbar{grid-template-columns:1fr 1fr}
+  .center{grid-column:1/-1;order:-1}
+  .score{font-size:48px}
+  .team h2{font-size:20px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
-
 <div class="app">
-  <h1>🕹️ FAMILY FEUD — DIWALI EDITION</h1>
+  <div class="lamps" aria-hidden="true">🪔 ✨ 🪔 ✨ 🪔</div>
+  <h1>Family Feud: Diwali Edition</h1>
+  <p class="sub">Click a team name to rename it. Click an answer to reveal it.</p>
 
-  <button class="toggle-editor" onclick="toggleEditor()">
-    ⚙️ Show / Hide Question Editor
-  </button>
+  <div class="toolbar">
+    <button class="b-ghost b-small" onclick="toggleEditor()">⚙️ Question editor</button>
+    <button class="b-ghost b-small" id="hideBtn" onclick="toggleHide()">🙈 Hide unrevealed answers</button>
+  </div>
 
   <div class="editor hidden-panel" id="editor">
     <h3>Edit or add questions</h3>
+    <p>One question per block, separated by a blank line. First line starts with Q:, then one answer per line as “answer | points”.</p>
     <textarea id="questionData" spellcheck="false"></textarea>
-
     <div class="editor-buttons">
-      <button onclick="loadQuestions()">✅ Load Questions</button>
-      <button onclick="saveQuestions()">💾 Save in Browser</button>
-      <button onclick="restoreBuiltInQuestions()">♻️ Restore Built-in Questions</button>
-      <button onclick="resetGame()">🔄 Reset Entire Game</button>
+      <button onclick="loadQuestions()">✅ Load questions</button>
+      <button onclick="saveQuestions()">💾 Save in browser</button>
+      <button onclick="restoreBuiltInQuestions()">♻️ Restore built-in questions</button>
+      <button class="b-pass" onclick="resetGame()">🔄 Reset entire game</button>
     </div>
   </div>
 
   <div class="topbar">
-    <div class="team">
-      <h2 id="team1Name">Team 1</h2>
+    <div class="team t1">
+      <h2 id="team1Name" contenteditable="true" spellcheck="false">Team 1</h2>
       <div class="score" id="team1Score">0</div>
-
       <div class="team-controls">
-        <button onclick="adjustScore(0, 1)">+1</button>
-        <button onclick="adjustScore(0, 5)">+5</button>
-        <button onclick="adjustScore(0, 10)">+10</button>
-        <button onclick="adjustScore(0, -5)">-5</button>
+        <button class="b-small" onclick="adjustScore(0,1)">+1</button>
+        <button class="b-small" onclick="adjustScore(0,5)">+5</button>
+        <button class="b-small" onclick="adjustScore(0,10)">+10</button>
+        <button class="b-small b-ghost" onclick="adjustScore(0,-5)">−5</button>
       </div>
     </div>
 
     <div class="center">
       <div class="round" id="roundLabel">Question 1</div>
-      <div class="timer" id="timer">30</div>
-
-      <div>
-        <button onclick="startTimer()">▶️ Start 30s</button>
-        <button onclick="pauseTimer()">⏸ Pause</button>
-        <button onclick="resetTimer()">🔁 Reset</button>
+      <div class="timer" id="timerRing"><div class="timer-in" id="timer">30</div></div>
+      <div class="timer-btns">
+        <button class="b-small" onclick="startTimer()">▶ Start</button>
+        <button class="b-small b-ghost" onclick="pauseTimer()">⏸ Pause</button>
+        <button class="b-small b-ghost" onclick="resetTimer()">↺ Reset</button>
       </div>
     </div>
 
-    <div class="team">
-      <h2 id="team2Name">Team 2</h2>
+    <div class="team t2">
+      <h2 id="team2Name" contenteditable="true" spellcheck="false">Team 2</h2>
       <div class="score" id="team2Score">0</div>
-
       <div class="team-controls">
-        <button onclick="adjustScore(1, 1)">+1</button>
-        <button onclick="adjustScore(1, 5)">+5</button>
-        <button onclick="adjustScore(1, 10)">+10</button>
-        <button onclick="adjustScore(1, -5)">-5</button>
+        <button class="b-small" onclick="adjustScore(1,1)">+1</button>
+        <button class="b-small" onclick="adjustScore(1,5)">+5</button>
+        <button class="b-small" onclick="adjustScore(1,10)">+10</button>
+        <button class="b-small b-ghost" onclick="adjustScore(1,-5)">−5</button>
       </div>
     </div>
   </div>
 
   <div class="question" id="questionText"></div>
-
   <div class="board" id="answerBoard"></div>
 
-  <div class="strikes">
-    <div class="strike-x" id="strike1" onclick="toggleStrike(1)">X</div>
-    <div class="strike-x" id="strike2" onclick="toggleStrike(2)">X</div>
-    <div class="strike-x" id="strike3" onclick="toggleStrike(3)">X</div>
+  <div class="row-mid">
+    <div class="strikes">
+      <div class="strike" id="strike1" tabindex="0" role="button" aria-label="Strike 1" onclick="toggleStrike(1)">✕</div>
+      <div class="strike" id="strike2" tabindex="0" role="button" aria-label="Strike 2" onclick="toggleStrike(2)">✕</div>
+      <div class="strike" id="strike3" tabindex="0" role="button" aria-label="Strike 3" onclick="toggleStrike(3)">✕</div>
+    </div>
+    <div class="pot">Round points<b id="pot">0</b></div>
   </div>
 
-  <div class="status" id="status">
-    Face-Off: First correct buzz-in answer decides Play or Pass.
-  </div>
+  <div class="status" id="status"></div>
 
   <div class="controls">
-    <button class="steal" onclick="startSteal()">🟢 Steal — Start 30s</button>
-    <button class="pass" onclick="passRound()">🔁 Pass Round</button>
-    <button onclick="giveRoundTo(0)">🏆 Round Points → Team 1</button>
-    <button onclick="giveRoundTo(1)">🏆 Round Points → Team 2</button>
-    <button class="next" onclick="nextQuestion()">➡️ Next Question</button>
+    <button class="b-steal" onclick="startSteal()">🟢 Steal: start 30s</button>
+    <button class="b-pass" onclick="passRound()">🔁 Pass round</button>
+    <button onclick="giveRoundTo(0)">🏆 Points → <span class="n1">Team 1</span></button>
+    <button onclick="giveRoundTo(1)">🏆 Points → <span class="n2">Team 2</span></button>
+    <button class="b-next" onclick="nextQuestion()">➡️ Next question</button>
   </div>
 </div>
 
 <script>
-const builtInQuestions = [
+const builtInQuestions=[
   {
     q: "What is the most random or old item you always find in a corner while doing Diwali cleaning?",
     answers: [
@@ -446,298 +331,150 @@ const builtInQuestions = [
     ]
   }
 ];
+let questions=builtInQuestions, current=0, roundPoints=0, timerId=null, timeLeft=30, stealMode=false;
+const $=id=>document.getElementById(id);
+const IDLE="Face-off: the first correct buzz-in answer decides play or pass.";
 
-let questions = builtInQuestions;
-let current = 0;
-let roundPoints = 0;
-let timerId = null;
-let timeLeft = 30;
-let stealMode = false;
-
-function toggleEditor() {
-  document.getElementById("editor").classList.toggle("hidden-panel");
+function toggleEditor(){$("editor").classList.toggle("hidden-panel")}
+function toggleHide(){
+  const on=$("answerBoard").classList.toggle("hide-answers");
+  $("hideBtn").textContent=on?"👀 Show all answers":"🙈 Hide unrevealed answers";
 }
-
-function questionsToText() {
-  return questions.map(q => {
-    const answers = q.answers
-      .map(a => `${a.text} | ${a.points}`)
-      .join("\n");
-
-    return `Q: ${q.q}\n${answers}`;
-  }).join("\n\n");
+function questionsToText(){
+  return questions.map(q=>"Q: "+q.q+"\n"+q.answers.map(a=>a.text+" | "+a.points).join("\n")).join("\n\n");
 }
-
-function parseQuestions(raw) {
-  return raw
-    .trim()
-    .split(/\n\s*\n/)
-    .map(block => {
-      const lines = block.trim().split("\n");
-      const q = lines[0].replace(/^Q\s*\d*\s*:\s*/i, "");
-
-      const answers = lines.slice(1).map(line => {
-        const match = line.match(/^(.*?)\s*\((\d+)\s*points?\)$/i);
-
-        if (match) {
-          return {
-            text: match[1].trim(),
-            points: Number(match[2])
-          };
-        }
-
-        const [text, points] = line.split("|").map(x => x.trim());
-        return {
-          text: text,
-          points: Number(points) || 0
-        };
-      }).filter(a => a.text);
-
-      return { q, answers };
-    })
-    .filter(q => q.answers.length);
+function parseQuestions(raw){
+  return raw.trim().split(/\n\s*\n/).map(block=>{
+    const lines=block.trim().split("\n");
+    const q=lines[0].replace(/^Q\s*\d*\s*:\s*/i,"");
+    const answers=lines.slice(1).map(line=>{
+      const m=line.match(/^(.*?)\s*\((\d+)\s*points?\)$/i);
+      if(m)return{text:m[1].trim(),points:Number(m[2])};
+      const [text,points]=line.split("|").map(x=>x.trim());
+      return{text,points:Number(points)||0};
+    }).filter(a=>a.text);
+    return{q,answers};
+  }).filter(q=>q.answers.length);
 }
-
-function loadQuestions() {
-  const parsed = parseQuestions(
-    document.getElementById("questionData").value
-  );
-
-  if (!parsed.length) {
-    alert("Please add at least one valid question.");
-    return;
-  }
-
-  questions = parsed;
-  current = 0;
-  resetRound();
-  renderQuestion();
-
-  alert(`Loaded ${questions.length} questions.`);
+function loadQuestions(){
+  const parsed=parseQuestions($("questionData").value);
+  if(!parsed.length){alert("Add at least one question with one answer.");return}
+  questions=parsed;current=0;resetRound();renderQuestion();
+  alert("Loaded "+questions.length+" questions.");
 }
-
-function saveQuestions() {
-  localStorage.setItem(
-    "familyFeudQuestions",
-    document.getElementById("questionData").value
-  );
-
-  alert("Questions saved in this browser.");
+function saveQuestions(){
+  try{localStorage.setItem("familyFeudQuestions",$("questionData").value);alert("Questions saved in this browser.")}
+  catch(e){alert("This browser blocked saving. Your questions are still loaded for this session.")}
 }
-
-function restoreBuiltInQuestions() {
-  localStorage.removeItem("familyFeudQuestions");
-  questions = builtInQuestions;
-
-  document.getElementById("questionData").value = questionsToText();
-
-  current = 0;
-  resetRound();
-  renderQuestion();
-
-  alert("Built-in Diwali questions restored.");
+function restoreBuiltInQuestions(){
+  try{localStorage.removeItem("familyFeudQuestions")}catch(e){}
+  questions=builtInQuestions;$("questionData").value=questionsToText();
+  current=0;resetRound();renderQuestion();alert("Built-in Diwali questions restored.");
 }
-
-function renderQuestion() {
-  const q = questions[current];
-
-  document.getElementById("questionText").textContent = q.q;
-  document.getElementById("roundLabel").textContent =
-    `Question ${current + 1} of ${questions.length}`;
-
-  const board = document.getElementById("answerBoard");
-  board.innerHTML = "";
-
-  q.answers.forEach(answer => {
-    const div = document.createElement("div");
-    div.className = "answer";
-
-    div.innerHTML = `
-      <span class="text">${answer.text}</span>
-      <span class="pts">${answer.points}</span>
-    `;
-
-    div.onclick = () => selectAnswer(div, answer);
-    board.appendChild(div);
+function renderQuestion(){
+  const q=questions[current];
+  $("questionText").textContent=q.q;
+  $("roundLabel").textContent="Question "+(current+1)+" of "+questions.length;
+  const board=$("answerBoard");board.innerHTML="";
+  q.answers.forEach((a,i)=>{
+    const d=document.createElement("div");
+    d.className="answer";d.tabIndex=0;d.setAttribute("role","button");
+    const r=document.createElement("span");r.className="rank";r.textContent=i+1;
+    const t=document.createElement("span");t.className="text";t.textContent=a.text;
+    const p=document.createElement("span");p.className="pts";p.textContent=a.points;
+    d.append(r,t,p);
+    d.onclick=()=>selectAnswer(d,a);
+    d.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();selectAnswer(d,a)}};
+    board.appendChild(d);
   });
 }
-
-function selectAnswer(el, answer) {
-  if (el.classList.contains("selected")) return;
-
-  el.classList.add("selected");
-  roundPoints += answer.points;
-
-  setStatus(
-    `✔️ Selected: ${answer.text} — +${answer.points} points. Round total: ${roundPoints}`
-  );
-
-  checkBoardComplete();
-}
-
-function checkBoardComplete() {
-  const remaining = [
-    ...document.querySelectorAll(".answer")
-  ].filter(a => !a.classList.contains("selected"));
-
-  if (remaining.length === 0) {
-    stopTimer();
-    setStatus("🎉 Board cleared! The playing team wins all the round points.");
+function setPot(n){roundPoints=n;$("pot").textContent=n}
+function selectAnswer(el,a){
+  if(el.classList.contains("selected"))return;
+  el.classList.add("selected");setPot(roundPoints+a.points);
+  setStatus("✔️ "+a.text+": +"+a.points+" points. Round total: "+roundPoints);
+  if(![...document.querySelectorAll(".answer")].some(x=>!x.classList.contains("selected"))){
+    stopTimer();setStatus("🎉 Board cleared! The playing team wins all the round points.");
   }
 }
-
-function toggleStrike(number) {
-  const strike = document.getElementById("strike" + number);
-  strike.classList.toggle("on");
-
-  const activeStrikes = [
-    ...document.querySelectorAll(".strike-x")
-  ].filter(x => x.classList.contains("on")).length;
-
-  if (activeStrikes === 3) {
-    setStatus(
-      "❌❌❌ 3 Strikes! Opposing team gets 30 seconds to agree on ONE steal answer."
-    );
-  } else if (activeStrikes > 0) {
-    setStatus(`❌ ${activeStrikes} strike${activeStrikes > 1 ? "s" : ""} marked.`);
-  } else {
-    setStatus("No strikes marked.");
+function toggleStrike(n){
+  $("strike"+n).classList.toggle("on");
+  const c=document.querySelectorAll(".strike.on").length;
+  if(c===3)setStatus("❌❌❌ Three strikes! The other team gets 30 seconds to agree on ONE steal answer.");
+  else setStatus(c?"❌ "+c+" strike"+(c>1?"s":"")+" marked.":"No strikes marked.");
+}
+document.addEventListener("keydown",e=>{
+  if(e.target.classList&&e.target.classList.contains("strike")&&(e.key==="Enter"||e.key===" ")){
+    e.preventDefault();toggleStrike(Number(e.target.id.slice(-1)));
   }
+});
+function startSteal(){
+  stealMode=true;$("timerRing").classList.add("steal");
+  setStatus("🟢 Steal: the other team has 30 seconds for one single guess.");
+  timeLeft=30;drawTimer();startTimer(true);
 }
-
-function startSteal() {
-  stealMode = true;
-  document.getElementById("timer").classList.add("steal");
-
-  setStatus(
-    "🟢 STEAL: Opposing team has 30 seconds for one single guess."
-  );
-
-  startTimer();
+function passRound(){setStatus("🔁 Round passed to the other team. Keep guessing the remaining answers.")}
+function teamName(i){return $(i===0?"team1Name":"team2Name").textContent.trim()||("Team "+(i+1))}
+function giveRoundTo(i){
+  adjustScore(i,roundPoints);
+  setStatus("🏆 "+roundPoints+" points awarded to "+teamName(i)+". Press Next question.");
+  setPot(0);
 }
-
-function passRound() {
-  setStatus(
-    "🔁 Round passed to the opposing team. Continue guessing the remaining answers."
-  );
+function adjustScore(i,amt){
+  const el=$(i===0?"team1Score":"team2Score");
+  el.textContent=Math.max(0,Number(el.textContent)+amt);
+  el.classList.remove("bump");void el.offsetWidth;el.classList.add("bump");
 }
-
-function giveRoundTo(teamIndex) {
-  adjustScore(teamIndex, roundPoints);
-
-  setStatus(
-    `🏆 ${roundPoints} points awarded to ${
-      teamIndex === 0 ? "Team 1" : "Team 2"
-    }. Press Next Question.`
-  );
-
-  roundPoints = 0;
+function drawTimer(){
+  $("timer").textContent=timeLeft;
+  $("timerRing").style.setProperty("--p",(timeLeft/30*100)+"%");
+  $("timerRing").classList.toggle("low",timeLeft<=5&&timeLeft>0);
 }
-
-function adjustScore(teamIndex, amount) {
-  const el = document.getElementById(
-    teamIndex === 0 ? "team1Score" : "team2Score"
-  );
-
-  el.textContent = Math.max(0, Number(el.textContent) + amount);
-}
-
-function startTimer() {
+function startTimer(keep){
   stopTimer();
-
-  timerId = setInterval(() => {
-    timeLeft--;
-    document.getElementById("timer").textContent = timeLeft;
-
-    if (timeLeft <= 0) {
+  if(!keep&&timeLeft<=0){timeLeft=30;drawTimer()}
+  timerId=setInterval(()=>{
+    timeLeft--;drawTimer();
+    if(timeLeft<=0){
       stopTimer();
-
-      if (stealMode) {
-        setStatus(
-          "⏰ Steal time over! If their one guess was correct, award the round points manually."
-        );
-      } else {
-        setStatus("⏰ Time over!");
-      }
+      setStatus(stealMode?"⏰ Steal time over! If their one guess was correct, award the round points.":"⏰ Time over!");
     }
-  }, 1000);
+  },1000);
 }
-
-function pauseTimer() {
-  stopTimer();
-  setStatus("⏸ Timer paused.");
+function pauseTimer(){stopTimer();setStatus("⏸ Timer paused.")}
+function resetTimer(){
+  stopTimer();timeLeft=30;stealMode=false;
+  $("timerRing").classList.remove("steal");drawTimer();
 }
-
-function resetTimer() {
-  stopTimer();
-  timeLeft = 30;
-  stealMode = false;
-
-  document.getElementById("timer").classList.remove("steal");
-  document.getElementById("timer").textContent = 30;
+function stopTimer(){if(timerId){clearInterval(timerId);timerId=null}}
+function resetRound(){
+  setPot(0);resetTimer();
+  document.querySelectorAll(".strike").forEach(s=>s.classList.remove("on"));
+  setStatus(IDLE);
 }
-
-function stopTimer() {
-  if (timerId) {
-    clearInterval(timerId);
-    timerId = null;
-  }
+function nextQuestion(){
+  if(current<questions.length-1)current++;
+  else{setStatus("That was the last question. Use Reset entire game to start over.");return}
+  resetRound();renderQuestion();
 }
-
-function resetRound() {
-  roundPoints = 0;
-  stealMode = false;
-
-  resetTimer();
-
-  [1, 2, 3].forEach(number => {
-    document.getElementById("strike" + number).classList.remove("on");
-  });
-
-  setStatus(
-    "Face-Off: First correct buzz-in answer decides Play or Pass."
-  );
+function resetGame(){
+  if(!confirm("Reset scores, strikes, timer, and return to Question 1?"))return;
+  $("team1Score").textContent=0;$("team2Score").textContent=0;
+  current=0;resetRound();renderQuestion();
 }
-
-function nextQuestion() {
-  if (current < questions.length - 1) {
-    current++;
-  }
-
-  resetRound();
-  renderQuestion();
+function setStatus(t){$("status").textContent=t}
+function syncNames(){
+  $("team1Name").addEventListener("input",()=>document.querySelector(".n1").textContent=teamName(0));
+  $("team2Name").addEventListener("input",()=>document.querySelector(".n2").textContent=teamName(1));
 }
-
-function resetGame() {
-  if (!confirm("Reset scores, strikes, timer, and return to Question 1?")) {
-    return;
-  }
-
-  document.getElementById("team1Score").textContent = 0;
-  document.getElementById("team2Score").textContent = 0;
-
-  current = 0;
-  resetRound();
-  renderQuestion();
-}
-
-function setStatus(text) {
-  document.getElementById("status").textContent = text;
-}
-
-window.onload = function () {
-  const saved = localStorage.getItem("familyFeudQuestions");
-
-  if (saved) {
-    localStorage.removeItem("familyFeudQuestions");
-  }
-
-  document.getElementById("questionData").value = questionsToText();
-  questions = builtInQuestions;
-
-  renderQuestion();
+window.onload=function(){
+  try{
+    const saved=localStorage.getItem("familyFeudQuestions");
+    if(saved){const p=parseQuestions(saved);if(p.length)questions=p}
+  }catch(e){}
+  $("questionData").value=questionsToText();
+  syncNames();resetRound();renderQuestion();
 };
 </script>
-
 </body>
 </html>
