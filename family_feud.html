@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Family Feud — Diwali Edition</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+  }
+
+  body {
+    background: radial-gradient(circle at top, #123a7a, #071a3a);
+    color: white;
+    min-height: 100vh;
+    padding: 16px;
+  }
+
+  .app {
+    max-width: 1200px;
+    margin: auto;
+  }
+
+  h1 {
+    text-align: center;
+    color: #ffd54a;
+    margin-bottom: 14px;
+    text-shadow: 2px 2px #000;
+  }
+
+  .topbar {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .team {
+    background: #0d2b5c;
+    border: 3px solid #ffd54a;
+    border-radius: 14px;
+    padding: 12px;
+    text-align: center;
+  }
+
+  .team h2 {
+    font-size: 22px;
+    margin-bottom: 6px;
+  }
+
+  .score {
+    font-size: 44px;
+    font-weight: bold;
+    color: #7CFC00;
+  }
+
+  .team-controls {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+
+  .center {
+    text-align: center;
+  }
+
+  .round {
+    font-size: 20px;
+    color: #ffd54a;
+    font-weight: bold;
+  }
+
+  .timer {
+    font-size: 54px;
+    font-weight: bold;
+    margin: 6px 0;
+    color: white;
+    text-shadow: 2px 2px #000;
+  }
+
+  .timer.steal {
+    color: #ff5252;
+  }
+
+  .question {
+    background: #0d2b5c;
+    border: 3px solid #ffd54a;
+    border-radius: 14px;
+    padding: 18px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 16px;
+    min-height: 90px;
+  }
+
+  .board {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .answer {
+    background: #123a7a;
+    border: 3px solid #4da3ff;
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 64px;
+    transition: 0.15s;
+  }
+
+  .answer:hover {
+    background: #1a4b96;
+  }
+
+  .answer .pts {
+    font-size: 24px;
+  }
+
+  .answer.selected {
+    background: #ffd54a;
+    color: #071a3a;
+    border-color: white;
+    cursor: default;
+  }
+
+  .controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  button {
+    padding: 14px 10px;
+    font-size: 17px;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    color: #071a3a;
+    background: #ffd54a;
+  }
+
+  button:hover {
+    filter: brightness(1.1);
+  }
+
+  .steal {
+    background: #7CFC00;
+  }
+
+  .pass {
+    background: #4da3ff;
+    color: white;
+  }
+
+  .next {
+    background: white;
+  }
+
+  .strikes {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin: 10px 0 16px;
+  }
+
+  .strike-x {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #7a0d0d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    font-weight: bold;
+    color: #ff5252;
+    border: 4px solid #ff5252;
+    cursor: pointer;
+    user-select: none;
+    transition: 0.15s;
+  }
+
+  .strike-x:hover {
+    transform: scale(1.05);
+  }
+
+  .strike-x.on {
+    background: #ff5252;
+    color: white;
+  }
+
+  .status {
+    text-align: center;
+    font-size: 21px;
+    font-weight: bold;
+    min-height: 30px;
+    color: #ffd54a;
+    margin-bottom: 12px;
+  }
+
+  .editor {
+    background: #0d2b5c;
+    border: 3px solid #4da3ff;
+    border-radius: 14px;
+    padding: 16px;
+    margin-top: 20px;
+  }
+
+  .editor h3 {
+    color: #ffd54a;
+    margin-bottom: 10px;
+  }
+
+  textarea {
+    width: 100%;
+    height: 220px;
+    font-family: monospace;
+    font-size: 14px;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+  }
+
+  .editor-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+
+  .hidden-panel {
+    display: none;
+  }
+
+  .toggle-editor {
+    background: #4da3ff;
+    color: white;
+    margin: 0 auto 16px;
+    display: block;
+  }
+
+  @media (max-width: 700px) {
+    .board {
+      grid-template-columns: 1fr;
+    }
+
+    .topbar {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <h1>🕹️ FAMILY FEUD — DIWALI EDITION</h1>
+
+  <button class="toggle-editor" onclick="toggleEditor()">
+    ⚙️ Show / Hide Question Editor
+  </button>
+
+  <div class="editor hidden-panel" id="editor">
+    <h3>Edit or add questions</h3>
+    <textarea id="questionData" spellcheck="false"></textarea>
+
+    <div class="editor-buttons">
+      <button onclick="loadQuestions()">✅ Load Questions</button>
+      <button onclick="saveQuestions()">💾 Save in Browser</button>
+      <button onclick="restoreBuiltInQuestions()">♻️ Restore Built-in Questions</button>
+      <button onclick="resetGame()">🔄 Reset Entire Game</button>
+    </div>
+  </div>
+
+  <div class="topbar">
+    <div class="team">
+      <h2 id="team1Name">Team 1</h2>
+      <div class="score" id="team1Score">0</div>
+
+      <div class="team-controls">
+        <button onclick="adjustScore(0, 1)">+1</button>
+        <button onclick="adjustScore(0, 5)">+5</button>
+        <button onclick="adjustScore(0, 10)">+10</button>
+        <button onclick="adjustScore(0, -5)">-5</button>
+      </div>
+    </div>
+
+    <div class="center">
+      <div class="round" id="roundLabel">Question 1</div>
+      <div class="timer" id="timer">30</div>
+
+      <div>
+        <button onclick="startTimer()">▶️ Start 30s</button>
+        <button onclick="pauseTimer()">⏸ Pause</button>
+        <button onclick="resetTimer()">🔁 Reset</button>
+      </div>
+    </div>
+
+    <div class="team">
+      <h2 id="team2Name">Team 2</h2>
+      <div class="score" id="team2Score">0</div>
+
+      <div class="team-controls">
+        <button onclick="adjustScore(1, 1)">+1</button>
+        <button onclick="adjustScore(1, 5)">+5</button>
+        <button onclick="adjustScore(1, 10)">+10</button>
+        <button onclick="adjustScore(1, -5)">-5</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="question" id="questionText"></div>
+
+  <div class="board" id="answerBoard"></div>
+
+  <div class="strikes">
+    <div class="strike-x" id="strike1" onclick="toggleStrike(1)">X</div>
+    <div class="strike-x" id="strike2" onclick="toggleStrike(2)">X</div>
+    <div class="strike-x" id="strike3" onclick="toggleStrike(3)">X</div>
+  </div>
+
+  <div class="status" id="status">
+    Face-Off: First correct buzz-in answer decides Play or Pass.
+  </div>
+
+  <div class="controls">
+    <button class="steal" onclick="startSteal()">🟢 Steal — Start 30s</button>
+    <button class="pass" onclick="passRound()">🔁 Pass Round</button>
+    <button onclick="giveRoundTo(0)">🏆 Round Points → Team 1</button>
+    <button onclick="giveRoundTo(1)">🏆 Round Points → Team 2</button>
+    <button class="next" onclick="nextQuestion()">➡️ Next Question</button>
+  </div>
+</div>
+
+<script>
+const builtInQuestions = [
+  {
+    q: "What is the most random or old item you always find in a corner while doing Diwali cleaning?",
+    answers: [
+      { text: "Old coins / loose change", points: 40 },
+      { text: "Childhood toys or board game pieces", points: 25 },
+      { text: "A random key to a lock that no longer exists", points: 20 },
+      { text: "Expired medicine strips or old grocery bills", points: 10 },
+      { text: "Leftover unburnt diyas or half-melted candles from last year", points: 3 },
+      { text: "An empty box of an electronic item you bought 3 years ago", points: 1 },
+      { text: "A missing single sock or a completely dried-out pen", points: 1 }
+    ]
+  },
+  {
+    q: "What is the very first thing people do the day after Diwali?",
+    answers: [
+      { text: "Sleep in late / rest all day to recover", points: 45 },
+      { text: "Clean up the burnt cracker trash and debris from the balcony", points: 30 },
+      { text: "Count, sort, or hide the leftover sweet boxes", points: 15 },
+      { text: "Post the remaining Diwali outfits/photos on Instagram", points: 5 },
+      { text: "Eat cold leftovers or sweets for breakfast", points: 3 },
+      { text: "Calculate how much money they lost at the card party", points: 1 },
+      { text: "Take down the heavy decorations that are in the way", points: 1 }
+    ]
+  },
+  {
+    q: "What do parents scold their kids for the most on Diwali day?",
+    answers: [
+      { text: "Getting oil stains or dirt on their brand-new festive clothes", points: 50 },
+      { text: "Not helping with the house decorations or last-minute chores", points: 20 },
+      { text: "Being careless or unsafe while lighting firecrackers", points: 10 },
+      { text: "Staring at their phones or texting during the Laxmi Pooja", points: 10 },
+      { text: "Waking up way too late on the main festival morning", points: 5 },
+      { text: "Eating the pooja sweets before the prayers are actually finished", points: 3 },
+      { text: "Disappearing to meet friends right when guests are arriving", points: 2 }
+    ]
+  },
+  {
+    q: "If you want to avoid gifting Soan Papdi, what is the next easiest “default” Diwali gift you buy?",
+    answers: [
+      { text: "A box of Kaju Katli or assorted premium sweets", points: 45 },
+      { text: "A dry fruit gift box (Almonds, Cashews, Raisins)", points: 30 },
+      { text: "A Cadbury Celebrations or chocolate gift pack", points: 15 },
+      { text: "A glass bowl or ceramic cup dinnerware set", points: 5 },
+      { text: "A pack of scented candles or electronic diffuser", points: 3 },
+      { text: "A potted indoor plant or lucky bamboo", points: 1 },
+      { text: "A digital shopping gift card sent at the last minute", points: 1 }
+    ]
+  },
+  {
+    q: "Name a common food item you find on the table at a Diwali house party besides sweets.",
+    answers: [
+      { text: "Samosas", points: 45 },
+      { text: "Paneer Tikka / Dry Starters", points: 25 },
+      { text: "Aloo Bhujia / Namkeen mixtures", points: 15 },
+      { text: "Chole Bhature or Poori", points: 8 },
+      { text: "Dhokla or Kachori", points: 4 },
+      { text: "Salted Cashews or roasted Almonds", points: 2 },
+      { text: "Potato Chips with homemade dip", points: 1 }
+    ]
+  },
+  {
+    q: "Name something people do to look busy when guests visit on Diwali.",
+    answers: [
+      { text: "Offer to get water or serve cold drinks", points: 45 },
+      { text: "Adjust the snacks or arrange the dry fruit tray repeatedly", points: 25 },
+      { text: "Pretend to check on the kitchen / food preparation", points: 15 },
+      { text: "Fix the fairy lights or light a floating candle", points: 8 },
+      { text: "Start taking group photos of everyone else to avoid talking", points: 4 },
+      { text: "Frantically look for a missing serving spoon or napkin box", points: 2 },
+      { text: "Guide people on where to park their cars outside", points: 1 }
+    ]
+  },
+  {
+    q: "Name a classic topic of gossip at a Diwali family gathering.",
+    answers: [
+      { text: "Who gained or lost weight since the last wedding", points: 40 },
+      { text: "The price or quality of the gifts someone brought", points: 25 },
+      { text: "Job promotions, salary package, or college admissions", points: 15 },
+      { text: "Whose house has the best decorations or renovation this year", points: 10 },
+      { text: "Secret dating updates or who is expected to get married next", points: 6 },
+      { text: "Family property disputes or old inheritance arguments", points: 3 },
+      { text: "Which relative made an excuse and skipped the gathering", points: 1 }
+    ]
+  },
+  {
+    q: "Name a task that turns into an intense family argument while setting up for the party.",
+    answers: [
+      { text: "Deciding exactly where to place the main Rangoli so nobody steps on it", points: 50 },
+      { text: "Untangling a huge knot of fairy lights without breaking the bulbs", points: 25 },
+      { text: "Agreeing on the perfect, auspicious time to start the Laxmi Pooja", points: 10 },
+      { text: "Deciding which relative gets invited to which specific party night", points: 8 },
+      { text: "Arguing over who has to go back to the market for forgotten items", points: 4 },
+      { text: "Critiquing how someone else is hanging the door flower garlands", points: 2 },
+      { text: "Deciding the background music playlist for the evening", points: 1 }
+    ]
+  }
+];
+
+let questions = builtInQuestions;
+let current = 0;
+let roundPoints = 0;
+let timerId = null;
+let timeLeft = 30;
+let stealMode = false;
+
+function toggleEditor() {
+  document.getElementById("editor").classList.toggle("hidden-panel");
+}
+
+function questionsToText() {
+  return questions.map(q => {
+    const answers = q.answers
+      .map(a => `${a.text} | ${a.points}`)
+      .join("\n");
+
+    return `Q: ${q.q}\n${answers}`;
+  }).join("\n\n");
+}
+
+function parseQuestions(raw) {
+  return raw
+    .trim()
+    .split(/\n\s*\n/)
+    .map(block => {
+      const lines = block.trim().split("\n");
+      const q = lines[0].replace(/^Q\s*\d*\s*:\s*/i, "");
+
+      const answers = lines.slice(1).map(line => {
+        const match = line.match(/^(.*?)\s*\((\d+)\s*points?\)$/i);
+
+        if (match) {
+          return {
+            text: match[1].trim(),
+            points: Number(match[2])
+          };
+        }
+
+        const [text, points] = line.split("|").map(x => x.trim());
+        return {
+          text: text,
+          points: Number(points) || 0
+        };
+      }).filter(a => a.text);
+
+      return { q, answers };
+    })
+    .filter(q => q.answers.length);
+}
+
+function loadQuestions() {
+  const parsed = parseQuestions(
+    document.getElementById("questionData").value
+  );
+
+  if (!parsed.length) {
+    alert("Please add at least one valid question.");
+    return;
+  }
+
+  questions = parsed;
+  current = 0;
+  resetRound();
+  renderQuestion();
+
+  alert(`Loaded ${questions.length} questions.`);
+}
+
+function saveQuestions() {
+  localStorage.setItem(
+    "familyFeudQuestions",
+    document.getElementById("questionData").value
+  );
+
+  alert("Questions saved in this browser.");
+}
+
+function restoreBuiltInQuestions() {
+  localStorage.removeItem("familyFeudQuestions");
+  questions = builtInQuestions;
+
+  document.getElementById("questionData").value = questionsToText();
+
+  current = 0;
+  resetRound();
+  renderQuestion();
+
+  alert("Built-in Diwali questions restored.");
+}
+
+function renderQuestion() {
+  const q = questions[current];
+
+  document.getElementById("questionText").textContent = q.q;
+  document.getElementById("roundLabel").textContent =
+    `Question ${current + 1} of ${questions.length}`;
+
+  const board = document.getElementById("answerBoard");
+  board.innerHTML = "";
+
+  q.answers.forEach(answer => {
+    const div = document.createElement("div");
+    div.className = "answer";
+
+    div.innerHTML = `
+      <span class="text">${answer.text}</span>
+      <span class="pts">${answer.points}</span>
+    `;
+
+    div.onclick = () => selectAnswer(div, answer);
+    board.appendChild(div);
+  });
+}
+
+function selectAnswer(el, answer) {
+  if (el.classList.contains("selected")) return;
+
+  el.classList.add("selected");
+  roundPoints += answer.points;
+
+  setStatus(
+    `✔️ Selected: ${answer.text} — +${answer.points} points. Round total: ${roundPoints}`
+  );
+
+  checkBoardComplete();
+}
+
+function checkBoardComplete() {
+  const remaining = [
+    ...document.querySelectorAll(".answer")
+  ].filter(a => !a.classList.contains("selected"));
+
+  if (remaining.length === 0) {
+    stopTimer();
+    setStatus("🎉 Board cleared! The playing team wins all the round points.");
+  }
+}
+
+function toggleStrike(number) {
+  const strike = document.getElementById("strike" + number);
+  strike.classList.toggle("on");
+
+  const activeStrikes = [
+    ...document.querySelectorAll(".strike-x")
+  ].filter(x => x.classList.contains("on")).length;
+
+  if (activeStrikes === 3) {
+    setStatus(
+      "❌❌❌ 3 Strikes! Opposing team gets 30 seconds to agree on ONE steal answer."
+    );
+  } else if (activeStrikes > 0) {
+    setStatus(`❌ ${activeStrikes} strike${activeStrikes > 1 ? "s" : ""} marked.`);
+  } else {
+    setStatus("No strikes marked.");
+  }
+}
+
+function startSteal() {
+  stealMode = true;
+  document.getElementById("timer").classList.add("steal");
+
+  setStatus(
+    "🟢 STEAL: Opposing team has 30 seconds for one single guess."
+  );
+
+  startTimer();
+}
+
+function passRound() {
+  setStatus(
+    "🔁 Round passed to the opposing team. Continue guessing the remaining answers."
+  );
+}
+
+function giveRoundTo(teamIndex) {
+  adjustScore(teamIndex, roundPoints);
+
+  setStatus(
+    `🏆 ${roundPoints} points awarded to ${
+      teamIndex === 0 ? "Team 1" : "Team 2"
+    }. Press Next Question.`
+  );
+
+  roundPoints = 0;
+}
+
+function adjustScore(teamIndex, amount) {
+  const el = document.getElementById(
+    teamIndex === 0 ? "team1Score" : "team2Score"
+  );
+
+  el.textContent = Math.max(0, Number(el.textContent) + amount);
+}
+
+function startTimer() {
+  stopTimer();
+
+  timerId = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").textContent = timeLeft;
+
+    if (timeLeft <= 0) {
+      stopTimer();
+
+      if (stealMode) {
+        setStatus(
+          "⏰ Steal time over! If their one guess was correct, award the round points manually."
+        );
+      } else {
+        setStatus("⏰ Time over!");
+      }
+    }
+  }, 1000);
+}
+
+function pauseTimer() {
+  stopTimer();
+  setStatus("⏸ Timer paused.");
+}
+
+function resetTimer() {
+  stopTimer();
+  timeLeft = 30;
+  stealMode = false;
+
+  document.getElementById("timer").classList.remove("steal");
+  document.getElementById("timer").textContent = 30;
+}
+
+function stopTimer() {
+  if (timerId) {
+    clearInterval(timerId);
+    timerId = null;
+  }
+}
+
+function resetRound() {
+  roundPoints = 0;
+  stealMode = false;
+
+  resetTimer();
+
+  [1, 2, 3].forEach(number => {
+    document.getElementById("strike" + number).classList.remove("on");
+  });
+
+  setStatus(
+    "Face-Off: First correct buzz-in answer decides Play or Pass."
+  );
+}
+
+function nextQuestion() {
+  if (current < questions.length - 1) {
+    current++;
+  }
+
+  resetRound();
+  renderQuestion();
+}
+
+function resetGame() {
+  if (!confirm("Reset scores, strikes, timer, and return to Question 1?")) {
+    return;
+  }
+
+  document.getElementById("team1Score").textContent = 0;
+  document.getElementById("team2Score").textContent = 0;
+
+  current = 0;
+  resetRound();
+  renderQuestion();
+}
+
+function setStatus(text) {
+  document.getElementById("status").textContent = text;
+}
+
+window.onload = function () {
+  const saved = localStorage.getItem("familyFeudQuestions");
+
+  if (saved) {
+    localStorage.removeItem("familyFeudQuestions");
+  }
+
+  document.getElementById("questionData").value = questionsToText();
+  questions = builtInQuestions;
+
+  renderQuestion();
+};
+</script>
+
+</body>
+</html>
